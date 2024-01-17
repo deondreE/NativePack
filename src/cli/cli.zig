@@ -1,8 +1,9 @@
 const std = @import("std");
 const mem = @import("std").mem;
+const commands = @import("./commands.zig");
 
 /// commands that are apart of the cli.
-var possible_commands = [_][]const u8{ "build", "dev", "help", "doctor", "setup", "start" };
+var possible_commands = [_][]const u8{ "build", "dev", "doctor", "help", "setup", "start" };
 
 const command_type = enum(i8) { Build = 1, Dev = 2, Help = 3, Doctor = 4, Setup = 5, Start = 6 };
 
@@ -10,45 +11,27 @@ const command_type = enum(i8) { Build = 1, Dev = 2, Help = 3, Doctor = 4, Setup 
 
 /// Check that the command given matches the commands possible.
 pub fn cli_check_command(command: []const u8) command_type {
-    for (possible_commands) |c| {
-        // this contains the current command
-        if (mem.eql(u8, c, command)) {
-            // currently I don't know a better way to do this so I aplogize.
-            // TODO: make this look nice.
-            if (mem.eql(u8, command, "help")) {
-                return command_type.Help;
-            }
-            if (mem.eql(u8, command, "dev")) {
-                return command_type.Dev;
-            }
-            if (mem.eql(u8, command, "build")) {
-                return command_type.Build;
-            }
-            if (mem.eql(u8, command, "doctor")) {
-                return command_type.Doctor;
-            }
-            if (mem.eql(u8, command, "setup")) {
-                return command_type.Setup;
-            }
-            if (mem.eql(u8, command, "Start")) {
-                return command_type.Start;
-            }
+    var i: usize = 0;
+    while (i < possible_commands.len) : (i += 1) {
+        const c = possible_commands[i];
+        if (std.mem.eql(u8, c, command)) {
+            return switch (i) {
+                0 => command_type.Build,
+                1 => command_type.Dev,
+                2 => command_type.Doctor,
+                3 => command_type.Help,
+                4 => command_type.Setup,
+                5 => command_type.Start,
+                else => unreachable,
+            };
         }
     }
 
     return command_type.Help;
 }
 
-/// This will take nothing in and print out a large string that explains all commands.
-fn help_command() void {
-    std.debug.print("The current commands are: \n\n", .{});
-
-    inline for (possible_commands) |command| {
-        std.debug.print("\t{s}\n", .{command});
-    }
-}
-
 /// Run the core of the cli from this one function.
+/// Each of the commands is run from here as well, each one will have it's own fuction.
 pub fn cli_run() !void {
     const stdout = std.io.getStdOut().writer();
     const args = try std.process.argsAlloc(std.heap.page_allocator);
@@ -58,7 +41,7 @@ pub fn cli_run() !void {
 
     var cm_type = cli_check_command(args[1]);
     _ = switch (cm_type) {
-        .Help => help_command(),
+        .Help => commands.help_command(&possible_commands),
         .Build => return,
         .Setup => return,
         .Dev => return,

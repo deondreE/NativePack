@@ -10,3 +10,6 @@ pub fn help_command(possible_commands: [][]const u8) void {
         std.debug.print("\t{s}\n", .{command});
     }
 }
+
+/// Runs the users core project.
+pub fn run_project() void {}

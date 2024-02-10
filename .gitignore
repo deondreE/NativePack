@@ -1,3 +1,4 @@
 test.txt
 zig-cache/ 
 .vscode
+nativepack.json

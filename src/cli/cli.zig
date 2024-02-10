@@ -44,7 +44,7 @@ pub fn cli_run() !void {
         .Help => commands.help_command(&possible_commands),
         .Build => return,
         .Setup => return,
-        .Dev => return,
+        .Dev => commands.help_command(&possible_commands),
         .Doctor => return,
         .Start => return,
     };

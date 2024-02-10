@@ -1,4 +1,5 @@
 const std = @import("std");
+const config = @import("../config/json.zig");
 
 // ! Write all new commands here.
 
@@ -12,4 +13,7 @@ pub fn help_command(possible_commands: [][]const u8) void {
 }
 
 /// Runs the users core project.
-pub fn run_project() void {}
+pub fn run_project() void {
+    var b = config.UserConfig.get_conf_loc();
+    std.debug.print("{s}", .{b});
+}

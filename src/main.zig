@@ -5,12 +5,7 @@ const cli = @import("./cli/cli.zig");
 const json = @import("./config/json.zig");
 
 pub fn main() !void {
-
+    var conf = json.UserConfig.get_config();
+    std.log.info("{any}", .{conf});
     // try cli.cli_run();
-}
-
-test "config struct" {
-    var conf = json.UserConfig.get_conf_loc();
-    std.log.debug("{s}", .{conf});
-    // std.testing.expect(conf.builds != null);
 }

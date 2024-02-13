@@ -4,19 +4,23 @@ const erorr = @import("std").erorr;
 const Allocator = @import("std").mem.Allocator;
 const assert = std.debug.assert;
 
-pub const BuildTypes = enum { Android, iOS, MacOS, Windows };
+const Prettier = @import("./external.zig");
+const TsConfig = @import("./external.zig");
+const SwiftLint = @import("./external.zig");
 
-/// The struct for the config.
-pub const Config = struct { name: []const u8, builds: []BuildTypes, srcdir: []const u8, outdir: []const u8, rules: Rules };
+// pub const BuildTypes = enum { Android, iOS, MacOS, Windows };
+
+/// External config for things like prettier, and so on.
+pub const ExternalConfig = struct { prettier: Prettier, tsConfig: TsConfig, swiftLint: SwiftLint };
+
+pub const Config = struct { name: []const u8, srcdir: []const u8, outdir: []const u8, rules: Rules, config: ExternalConfig };
 
 /// Rules are for the compiler for follow when it comes to the build step of the project.
 pub const Rules = struct { optimize: bool };
 
-/// read the json config from the users file.
 pub fn read_config(alloc: Allocator, path: []const u8) !std.json.Parsed(Config) {
-    // ? could need to be more.
+    // ? could need to be more. Only by the size of the json file.
     const data = try std.fs.cwd().readFileAlloc(alloc, path, 512);
-    defer alloc.free(data);
 
     return std.json.parseFromSlice(Config, alloc, data, .{ .allocate = .alloc_always });
 }
@@ -24,37 +28,25 @@ pub fn read_config(alloc: Allocator, path: []const u8) !std.json.Parsed(Config) 
 /// <UserConfig> is the relative config of the active user of the cli interface. This can also be referenced from the
 /// core api, using `cli.current.config`.
 pub const UserConfig = struct {
-    pub fn get_config() Config {
+    pub fn get_config() !std.json.Parsed(Config) {
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
         const alloc = gpa.allocator();
 
-        var new_conf = read_config(alloc, get_conf_loc());
-        defer new_conf.deinit();
+        var new_conf = read_config(alloc, try get_conf_loc());
+        // find the memory type then destroy the current allocated memory.
+        defer alloc.free();
 
-        comptime var conf: Config = .{};
-
-        conf = new_conf;
-        return conf;
+        return new_conf;
     }
 
     /// find the local path of the user config, inside the current directory.
-    pub fn get_conf_loc() []const u8 {
-        // The config should always be located inside the root directory. So, we will first check there.
-        var root_path = std.fs.cwd();
+    pub fn get_conf_loc() ![]const u8 {
+        var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
+        const alloc = arena.allocator();
 
-        // search for nativepack.json inside of the users `cwd`.
+        const root_path = try std.fs.cwd().realpathAlloc(alloc, "./test/nativepack.json");
 
         return root_path;
     }
 };
-
-test "check config" {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const alloc = gpa.allocator();
-
-    const parsed = try read_config(alloc, "test/nativepack.json");
-    defer parsed.deinit();
-    const config = parsed.value;
-
-    std.testing.expect(@TypeOf(config) != null);
-}

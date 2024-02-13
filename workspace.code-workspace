@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+      "git.autoRepositoryDetection": "openEditors",
+      "search.quickOpen.includeSymbols": false,
+      "search.seedWithNearestWord": true,
+      "search.smartCase": true,
+      "search.followSymlinks": false,
+      "zig.buildOnSave": false,
+      "git.ignoreLimitWarning": true,
+      "workbench.colorCustomizations": {
+        "minimap.background": "#00000000",
+        "scrollbar.shadow": "#00000000"
+      }
+    }
+}

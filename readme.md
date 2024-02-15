@@ -1,7 +1,7 @@
 # NativePack
 
-A web->mobile runtime written in zig.
+Pure zig runtime for websites to be converted to native technologies. Allowing for easy native development.
 
-# TODO:
+# Contributing
 
-- [ ] Get config functioning correctly.
+Please only use GeneralPurposeAllocators when writing code inside this project. Thanks!

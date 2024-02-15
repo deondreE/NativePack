@@ -17,3 +17,16 @@ pub fn run_project() void {
     var b = config.UserConfig.get_conf_loc();
     std.debug.print("{s}", .{b});
 }
+
+/// doctor makes sure the user has all things isntalled that they are supposed to.
+pub fn doctor() void {
+    var platform = "";
+    _ = platform;
+}
+
+/// Runs the project scaffold command.
+pub fn scaffold() void {
+    // TODO: find the process of asking the user a question.
+    // TODO: run the doctor script, inside of Clang.
+    // TODO: figure out what framework the user is going to use.
+}

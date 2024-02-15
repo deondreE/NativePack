@@ -2,4 +2,5 @@ test.txt
 zig-cache/ 
 zig-out
 .vscode
-nativepack.json
+# test files that are not needed.
+test

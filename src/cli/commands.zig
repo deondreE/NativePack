@@ -27,6 +27,7 @@ pub fn doctor() void {
 /// Runs the project scaffold command.
 pub fn scaffold() void {
     // TODO: find the process of asking the user a question.
+
     // TODO: run the doctor script, inside of Clang.
     // TODO: figure out what framework the user is going to use.
 }

@@ -1,0 +1,14 @@
+{
+  "name": "{replace_this_name}",
+  "srcdir": ".",
+  "outdir": "./dist",
+  "rules": {
+    "optimize": true
+  }, 
+  "config": {
+    "prettier": "",
+    "swiftLint": "",
+    "eslint": ".eslintrc.cjs",
+    "tsconfig": "none"
+  }
+}

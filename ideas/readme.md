@@ -2,6 +2,8 @@
 
 In order for these steps to happen correctly, we need to be able to architect projects from the ground up. So, then we can control what is supported and what is not currently supported.
 
+React native by default is written in Objective-C using story books.
+
 ## Constructing a project
 
 User steps:
